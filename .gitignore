@@ -1,0 +1,11 @@
+.venv
+.env
+__pycache__
+.serverless
+node_modules
+package*.json
+.dynamodb
+.pytest_cache
+*.pyc
+.coverage
+.DS_Store

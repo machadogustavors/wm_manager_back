@@ -1,0 +1,148 @@
+service: wm-manager-api
+
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: python3.12
+  region: ${env:AWS_REGION}
+  stage: ${opt:stage, 'dev'}
+  
+  environment:
+    STAGE: ${opt:stage, 'dev'}
+  
+  memorySize: 256
+  timeout: 30
+  
+  iam:
+    role:
+      statements:
+        - Effect: Allow
+          Action:
+            - dynamodb:*
+          Resource: 
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/servicos"
+            - "arn:aws:dynamodb:${self:provider.region}:*:table/servicos/*"
+  
+  tags:
+    Environment: ${opt:stage, 'dev'}
+    Project: ${self:service}
+    ManagedBy: serverless
+
+package:
+  patterns:
+    - '!node_modules/**'
+    - '!.dynamodb/**'
+    - '!.pytest_cache/**'
+    - '!__pycache__/**'
+    - '!tests/**'
+    - '!.env'
+    - '!.git/**'
+    - '!.github/**'
+    - '!README.md'
+    - '!package*.json'
+    - '!requirements.txt'
+    - '!serverless*.yml'
+
+functions:
+  getServices:
+    handler: src/lambdas/get_services/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /services
+          method: get
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Api-Key
+            allowCredentials: false
+  
+  createService:
+    handler: src/lambdas/create_service/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /services
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Api-Key
+            allowCredentials: false
+
+  updateService:
+    handler: src/lambdas/update_service/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /services/{id}
+          method: put
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Api-Key
+            allowCredentials: false
+
+  deleteService:
+    handler: src/lambdas/delete_service/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /services/{id}
+          method: delete
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - Authorization
+              - X-Api-Key
+            allowCredentials: false
+
+resources:
+  Resources:
+    ServicosTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: servicos
+        BillingMode: PAY_PER_REQUEST
+        AttributeDefinitions:
+          - AttributeName: id_servico
+            AttributeType: S
+        KeySchema:
+          - AttributeName: id_servico
+            KeyType: HASH
+
+custom:
+  stages:
+    - dev
+    - prod
+  
+  dynamodb:
+    stages:
+      - dev
+    start:
+      port: 8000
+      inMemory: true
+      migrate: true
+  
+  pythonRequirements:
+    dockerizePip: true
+    layer:
+      name: python-deps
+      description: Python dependencies for WM Manager API
+
+plugins:
+  - serverless-python-requirements
+  - serverless-dynamodb-local
+  - serverless-offline

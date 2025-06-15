@@ -1,0 +1,6 @@
+{
+  "pathParameters": {
+    "id": "c03713ae-87d3-477f-b131-bbd134d6a635"
+  },
+  "body": "{\"client_name\":\"John Smith\",\"parts_cost\":\"200.00\",\"labor_cost\":\"100.00\",\"service_description\":\"Oil change, brake pads and filter replacement\"}"
+}

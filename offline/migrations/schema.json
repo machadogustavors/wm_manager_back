@@ -1,0 +1,21 @@
+{
+  "Table": {
+    "TableName": "servicos",
+    "KeySchema": [
+      {
+        "AttributeName": "id_servico",
+        "KeyType": "HASH"
+      }
+    ],
+    "AttributeDefinitions": [
+      {
+        "AttributeName": "id_servico",
+        "AttributeType": "S"
+      }
+    ],
+    "ProvisionedThroughput": {
+      "ReadCapacityUnits": 1,
+      "WriteCapacityUnits": 1
+    }
+  }
+}

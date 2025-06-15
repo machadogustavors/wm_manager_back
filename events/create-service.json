@@ -1,0 +1,3 @@
+{
+  "body": "{\"date\": \"2025-06-15\", \"client_name\": \"John Doe\", \"car_model\": \"Fiat Uno\", \"license_plate\": \"ABC1234\", \"parts_cost\": \"150.00\", \"labor_cost\": \"80.00\", \"mechanic\": \"Mike\", \"service_description\": \"Oil change and brake pads\", \"payment\": \"cash\"}"
+}
