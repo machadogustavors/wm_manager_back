@@ -1,10 +1,6 @@
 import os
 import boto3
 
-from dotenv import load_dotenv
-
-load_dotenv()
-
 class DynamoConnection:
     def __init__(self):
         self.dynamo = boto3.resource(

@@ -40,6 +40,7 @@ package:
     - '!.github/**'
     - '!README.md'
     - '!package*.json'
+    - '!requirements.txt'
     - '!serverless*.yml'
 
 functions:
