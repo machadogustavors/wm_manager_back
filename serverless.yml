@@ -1,4 +1,4 @@
-service: wm-manager-api
+service: wm-manager-back
 
 frameworkVersion: '3'
 
