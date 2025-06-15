@@ -1,4 +1,5 @@
 service: wm-manager-back
+frameworkVersion: "3"
 
 provider:
   name: aws
