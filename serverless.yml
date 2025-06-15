@@ -6,6 +6,8 @@ provider:
   runtime: python3.12
   region: ${env:AWS_REGION}
   stage: ${opt:stage, 'dev'}
+  layers:
+    - { Ref: PythonRequirementsLambdaLayer }
   
   environment:
     STAGE: ${opt:stage, 'dev'}
