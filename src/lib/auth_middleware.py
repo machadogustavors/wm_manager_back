@@ -26,7 +26,6 @@ def require_auth(handler):
             user_info = client.get_user(
                 AccessToken=token
             )
-
             event['user'] = user_info
 
             return handler(event, context)
