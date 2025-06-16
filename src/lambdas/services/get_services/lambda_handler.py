@@ -1,39 +1,31 @@
-import uuid
 import json
-
-from datetime import datetime
 
 from src.lib.dynamo_connection import DynamoConnection
 from src.lib.utils import DecimalEncoder, DynamoDBConverter
+from src.lib.auth_middleware import require_auth
 
-from src.lambdas.create_service.schema import CreateServiceRequest
+from src.lambdas.services.get_services.schema import Service
 
 db = DynamoConnection()
 
+@require_auth
 def lambda_handler(event, context):
     try:
-        body = json.loads(event['body'])
+        items = db.get_all_items('servicos')
 
-        service_request = CreateServiceRequest(**body)
+        py_items = [DynamoDBConverter.from_dynamo_format(item) for item in items]
 
-        item = service_request.model_dump()
-
-        item.update({
-            'id_servico': str(uuid.uuid4()),
-            'created_at': datetime.now()
-        })
-
-        dynamo_item = DynamoDBConverter.to_dynamo_format(item)
+        services = [Service(**item) for item in py_items]
         
-        result = db.create_item('servicos', dynamo_item)
-        
+        service_dict = [service.model_dump() for service in services]
+
         return {
             'statusCode': 200,
             'headers': {
                 'Content-Type': 'application/json',
                 'Access-Control-Allow-Origin': '*'
             },
-            'body': json.dumps(item, cls=DecimalEncoder)
+            'body': json.dumps(service_dict, cls=DecimalEncoder)
         }
     except Exception as e:
         return {

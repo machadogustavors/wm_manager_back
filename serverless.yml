@@ -11,6 +11,7 @@ provider:
   
   environment:
     STAGE: ${opt:stage, 'dev'}
+    COGNITO_CLIENT_ID: ${env:COGNITO_CLIENT_ID}
   
   memorySize: 256
   timeout: 30
@@ -24,6 +25,13 @@ provider:
           Resource: 
             - "arn:aws:dynamodb:${self:provider.region}:*:table/servicos"
             - "arn:aws:dynamodb:${self:provider.region}:*:table/servicos/*"
+        - Effect: Allow
+          Action:
+            - cognito-idp:SignUp
+            - cognito-idp:InitiateAuth
+            - cognito-idp:ConfirmSignUp
+            - cognito-idp:GetUser
+          Resource: "*"
   
   tags:
     Environment: ${opt:stage, 'dev'}
@@ -47,7 +55,7 @@ package:
 
 functions:
   getServices:
-    handler: src/lambdas/get_services/lambda_handler.lambda_handler
+    handler: src/lambdas/services/get_services/lambda_handler.lambda_handler
     memorySize: 256
     timeout: 30
     events:
@@ -63,7 +71,7 @@ functions:
             allowCredentials: false
   
   createService:
-    handler: src/lambdas/create_service/lambda_handler.lambda_handler
+    handler: src/lambdas/services/create_service/lambda_handler.lambda_handler
     memorySize: 256
     timeout: 30
     events:
@@ -79,7 +87,7 @@ functions:
             allowCredentials: false
 
   updateService:
-    handler: src/lambdas/update_service/lambda_handler.lambda_handler
+    handler: src/lambdas/services/update_service/lambda_handler.lambda_handler
     memorySize: 256
     timeout: 30
     events:
@@ -95,7 +103,7 @@ functions:
             allowCredentials: false
 
   deleteService:
-    handler: src/lambdas/delete_service/lambda_handler.lambda_handler
+    handler: src/lambdas/services/delete_service/lambda_handler.lambda_handler
     memorySize: 256
     timeout: 30
     events:
@@ -107,6 +115,51 @@ functions:
             headers:
               - Content-Type
               - Authorization
+              - X-Api-Key
+            allowCredentials: false
+
+  signUp:
+    handler: src/lambdas/auth/sign_up/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /auth/sign-up
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Api-Key
+            allowCredentials: false
+
+  signIn:
+    handler: src/lambdas/auth/sign_in/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /auth/sign-in
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
+              - X-Api-Key
+            allowCredentials: false
+
+  accountConfirm:
+    handler: src/lambdas/auth/account_confirm/lambda_handler.lambda_handler
+    memorySize: 256
+    timeout: 30
+    events:
+      - http:
+          path: /auth/confirm
+          method: post
+          cors:
+            origin: '*'
+            headers:
+              - Content-Type
               - X-Api-Key
             allowCredentials: false
 
