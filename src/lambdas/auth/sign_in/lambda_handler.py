@@ -13,7 +13,7 @@ def lambda_handler(event, context):
         
         response = client.initiate_auth(
             AuthFlow='USER_PASSWORD_AUTH',
-            ClientId=os.environ['COGNITO_CLIENT_ID'],
+            ClientId=os.getenv('COGNITO_CLIENT_ID'),
             AuthParameters={
                 'USERNAME': username,
                 'PASSWORD': password

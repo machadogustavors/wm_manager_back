@@ -24,7 +24,7 @@ def lambda_handler(event, context):
         client = boto3.client('cognito-idp')
 
         response = client.confirm_sign_up(
-            ClientId=os.environ['COGNITO_CLIENT_ID'],
+            ClientId=os.getenv('COGNITO_CLIENT_ID'),
             Username=username,
             ConfirmationCode=confirmation_code
         )
