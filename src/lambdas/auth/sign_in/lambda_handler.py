@@ -12,7 +12,6 @@ def lambda_handler(event, context):
         client = boto3.client('cognito-idp')
         
         response = client.initiate_auth(
-            UserPoolId=os.getenv('COGNITO_USER_POOL'),
             AuthFlow='USER_PASSWORD_AUTH',
             ClientId=os.getenv('COGNITO_CLIENT_ID'),
             AuthParameters={
