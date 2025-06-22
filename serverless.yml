@@ -12,6 +12,7 @@ provider:
   environment:
     STAGE: ${opt:stage, 'dev'}
     COGNITO_CLIENT_ID: ${env:COGNITO_CLIENT_ID}
+    COGNITO_USER_POOL: ${env:COGNITO_USER_POOL}
   
   memorySize: 256
   timeout: 30
