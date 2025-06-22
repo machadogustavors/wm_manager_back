@@ -19,7 +19,15 @@ def lambda_handler(event, context):
                 'PASSWORD': password
             }
         )
-        
+
+        access_token = response['AuthenticationResult']['AccessToken']
+        user_info = client.get_user(AccessToken=access_token)
+        email = None
+        for attr in user_info['UserAttributes']:
+            if attr['Name'] == 'email':
+                email = attr['Value']
+                break
+            
         return {
             'statusCode': 200,
             'headers': {
@@ -28,6 +36,7 @@ def lambda_handler(event, context):
             },
             'body': json.dumps({
                 'message': 'Successfully authenticated',
+                'email': email,
                 'tokens': {
                     'AccessToken': response['AuthenticationResult']['AccessToken'],
                     'IdToken': response['AuthenticationResult']['IdToken'],
