@@ -1,11 +1,9 @@
 import json
 
 from src.lib.dynamo_connection import DynamoConnection
-from src.lib.auth_middleware import require_auth
 
 db = DynamoConnection()
 
-@require_auth
 def lambda_handler(event, context):
     try:
         service_id = event['pathParameters']['id']

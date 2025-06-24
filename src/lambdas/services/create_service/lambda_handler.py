@@ -5,13 +5,11 @@ from datetime import datetime
 
 from src.lib.dynamo_connection import DynamoConnection
 from src.lib.utils import DecimalEncoder, DynamoDBConverter
-from src.lib.auth_middleware import require_auth
 
 from src.lambdas.services.create_service.schema import CreateServiceRequest
 
 db = DynamoConnection()
 
-@require_auth
 def lambda_handler(event, context):
     try:
         body = json.loads(event['body'])

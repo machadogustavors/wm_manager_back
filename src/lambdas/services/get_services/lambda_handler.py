@@ -2,13 +2,11 @@ import json
 
 from src.lib.dynamo_connection import DynamoConnection
 from src.lib.utils import DecimalEncoder, DynamoDBConverter
-from src.lib.auth_middleware import require_auth
 
 from src.lambdas.services.get_services.schema import Service
 
 db = DynamoConnection()
 
-@require_auth
 def lambda_handler(event, context):
     try:
         items = db.get_all_items('servicos')
