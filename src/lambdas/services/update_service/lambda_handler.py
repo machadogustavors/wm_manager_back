@@ -1,4 +1,5 @@
 import json
+import datetime
 
 from src.lib.dynamo_connection import DynamoConnection
 from src.lib.utils import DecimalEncoder
@@ -18,6 +19,10 @@ def lambda_handler(event, context):
         service_request = UpdateServiceRequest(**body)
         
         updates = service_request.model_dump(exclude_unset=True)
+        
+        for k, v in updates.items():
+            if isinstance(v, (datetime.date, datetime.datetime)):
+                updates[k] = v.isoformat()
         
         result = db.update_item(
             'servicos',
